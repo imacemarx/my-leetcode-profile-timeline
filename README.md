@@ -1,0 +1,1 @@
+Regularly collect screenshots of my Leetcode profile page, mainly to record my use of Leetcode.

@@ -1,0 +1,45 @@
+name: Leetcode Profile Screenshot Workflow
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron:  '0 12,0 * * *'
+permissions: write-all
+jobs:
+  screenshot:
+    name: Screenshot
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        width: [1200]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Get Current Date and Time
+        id: datetime
+        run: |
+          datetime=$(TZ=Asia/Singapore date +'%Y%m%d%H%M%S%z')
+          echo "datetime=${datetime/+/T}" >> $GITHUB_ENV
+      - name: Screenshot Leetcode Website
+        uses: swinton/screenshot-website@v1.x
+        with:
+          source: https://leetcode.com/imacemarx/
+          destination: ${{ env.datetime }}.png
+          full-page: true
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository }}
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with: 
+          name: ${{ env.datetime }}
+      - name: Commit and Push Changes
+        run: |
+          ls -al
+          mv ${{ env.datetime }}.png ./screenshot
+          git config --global user.name "imacemarx"
+          git config --global user.email "imacemarx@gmail.com"
+          git add screenshot/${{ env.datetime }}.png
+          git commit -m "other:Upload screenshot"
+          git push
