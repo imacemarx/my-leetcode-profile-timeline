@@ -1,8 +1,8 @@
-name: Leetcode Profile Screenshot
+name: Leetcode Profile Screenshotz
 on:
   workflow_dispatch: 
   schedule:
-    - cron:  '0 12,0 * * *'
+    - cron:  '0 0 * * *'
 permissions: write-all
 jobs:
   screenshot:
